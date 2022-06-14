@@ -1,0 +1,20 @@
+void	img_pixel_put2(t_img *img, int x, int y, int color)
+{
+	char    *pixel;
+	int		i;
+
+	// char *mlx_data_addr = img->img;
+	// *(unsigned int *)mlx_data_addr = color;
+	// *(unsigned int *)pixel = color;
+
+
+    pixel = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
+
+	for(int y = 0; y < HEIGHT; ++y)
+	for(int x = 0; x < WIDTH; ++x)
+{
+   	 pixel[(y * img->line_length) + x] = color;
+}
+
+
+}

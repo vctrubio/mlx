@@ -1,7 +1,12 @@
 #include "./header.h"
 
-#define HEIGHT 700
+#define HEIGHT 800
 #define WIDTH 400
+
+/* NOTES
+When you increment the pointer by one by one, you’re moving forward one byte in memory, so the final offset should be multiplied by 4.
+(y * line_bytes) + (x * 4)
+*/
 
 void	init_mlx_window(t_window **w)
 {
@@ -16,8 +21,9 @@ void	init_img_data(t_img **img, t_window **w)
 {
 	(*img) = malloc(sizeof(t_img));
 	(*w)->img = *img;
+
 	// void	*mlx_new_image(void *mlx_ptr,int width,int height);
-	(*img)->img = mlx_new_image((*w)->mlx_ptr, WIDTH - 100, HEIGHT - 100);
+	(*img)->img = mlx_new_image((*w)->mlx_ptr, WIDTH, HEIGHT);
 	(*w)->img->img = mlx_get_data_addr((*w)->img->img, &(*w)->img->bits_per_pixel, &(*w)->img->line_length, &(*w)->img->endian);
 }
 
@@ -26,37 +32,44 @@ void	init_img_data(t_img **img, t_window **w)
 //  index = line_len * y + x * (bpp / 8);
 void	img_pixel_put(t_img *img, int x, int y, int color)
 {
-	char    *pixel;
-	int		i;
+	char *buffer;
 
-	char *mlx_data_addr = img->img;
-	*(unsigned int *)mlx_data_addr = color;
-
-    pixel = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
-	i = 0;
-	while(i < x)
-	{
-		i++;
-	}
+	buffer = img->addr;
+	
+	buffer[(y * img->line_length) + x] = color;
 }
-
 
 
 int main()
 {
 	t_window	*w;
 	t_img		*img;
-	int x = 400; int y = 400;
 
 
 	init_mlx_window(&w);
 	init_img_data(&img, &w);
-	
-	img_pixel_put(img, 10, 40, 0x00ff110022);
+	printf("info: %dbbp %dline_length %dendian\n", img->bits_per_pixel, img->line_length, img->endian);
+
+	int i; int j;
+	i = 0; j = 5;
+	while (i <= 10)
+	{
+		img_pixel_put(img, i, j, 0xABCDEF);
+		i++;
+	}
+
+	mlx_put_image_to_window(w->mlx_ptr, w->mlx_window, w->img->img, 0, 0);
 
 	mlx_key_hook(w->mlx_window, ft_key_hook, w);
-	mlx_put_image_to_window(w->mlx_ptr, w->mlx_window, w->img->img, 20, 20);
 	mlx_loop(w->mlx_ptr);
 
 	return (43);
 }
+
+/* GOALS
+1. draw shapes, and move with different keystrokes
+2. draw a circle 
+3. export a "".ber" map
+4. make a player- that can move- wih xmp
+
+*/
