@@ -34,9 +34,8 @@ void	img_pixel_put(t_img *img, int x, int y, int color)
 {
 	char *buffer;
 
-	buffer = img->addr;
-	
-	buffer[(y * img->line_length) + x] = color;
+	buffer = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
+	*(unsigned int*)buffer = color;
 }
 
 
@@ -54,7 +53,7 @@ int main()
 	i = 0; j = 5;
 	while (i <= 10)
 	{
-		img_pixel_put(img, i, j, 0xABCDEF);
+		img_pixel_put(img, i, j, 0x00FF0000);
 		i++;
 	}
 
