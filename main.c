@@ -8,62 +8,36 @@ When you increment the pointer by one by one, you’re moving forward one byte i
 (y * line_bytes) + (x * 4)
 */
 
-void	init_mlx_window(t_window **w)
-{
-	(*w) = malloc(sizeof(t_window));
-	(*w)->mlx_ptr = mlx_init();
-	(*w)->height = HEIGHT; 
-	(*w)->weight = WIDTH;
-	(*w)->mlx_window = mlx_new_window((*w)->mlx_ptr, (*w)->weight, (*w)->height, "My notverygood Cube");
-}
+// int		ft_key_hook(int keycode)
+// {
 
-void	init_img_data(t_img **img, t_window **w)
-{
-	(*img) = malloc(sizeof(t_img));
-	(*w)->img = *img;
-
-	// void	*mlx_new_image(void *mlx_ptr,int width,int height);
-	(*img)->img = mlx_new_image((*w)->mlx_ptr, WIDTH, HEIGHT);
-	(*w)->img->img = mlx_get_data_addr((*w)->img->img, &(*w)->img->bits_per_pixel, &(*w)->img->line_length, &(*w)->img->endian);
-}
-
-
-// int offset = (y * img.line_length + x * (img.bits_per_pixel / 8));
-//  index = line_len * y + x * (bpp / 8);
-void	img_pixel_put(t_img *img, int x, int y, int color)
-{
-	char *buffer;
-
-	buffer = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
-	*(unsigned int*)buffer = color;
-}
-
+// }
 
 int main()
 {
-	t_window	*w;
-	t_img		*img;
+	init_prg();
+	init_window(200, 400, "Title");
 
+	mlx_hook((ft_window())->mlx_window, 2, 1, key_down, NULL); 
+	mlx_hook((ft_window())->mlx_window, 3, 1, key_up, NULL);
 
-	init_mlx_window(&w);
-	init_img_data(&img, &w);
-	printf("info: %dbbp %dline_length %dendian\n", img->bits_per_pixel, img->line_length, img->endian);
-
-	int i; int j;
-	i = 0; j = 5;
-	while (i <= 10)
-	{
-		img_pixel_put(img, i, j, 0x00FF0000);
-		i++;
-	}
-
-	mlx_put_image_to_window(w->mlx_ptr, w->mlx_window, w->img->img, 0, 0);
-
-	mlx_key_hook(w->mlx_window, ft_key_hook, w);
-	mlx_loop(w->mlx_ptr);
+	// mlx_key_hook((ft_window())->mlx_window, ft_key_hook, );
+	mlx_loop_hook((ft_prg()->mlx), print_key, NULL);
+	mlx_loop((ft_prg())->mlx);
 
 	return (43);
 }
+
+	// mlx_put_image_to_window(w->mlx_ptr, w->mlx_window, w->img->img, 0, 0);
+	// printf("info: %dbbp %dline_length %dendian\n", img->bits_per_pixel, img->line_length, img->endian);
+	// int i; int j;
+	// i = 0; j = 5;
+	// while (i <= 10)
+	// {
+	// 	img_pixel_put(img, i, j, 0xFF0000);
+	// 	i++;
+	// }
+
 
 /* GOALS
 1. draw shapes, and move with different keystrokes
